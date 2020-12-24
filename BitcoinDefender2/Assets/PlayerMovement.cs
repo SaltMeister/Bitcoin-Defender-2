@@ -5,38 +5,44 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 	public float speed;
-    bool isHit;
+    bool isTouch;
     Rigidbody2D rb2d;
 
-    [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
     private Vector3 velocity = Vector3.zero;
 
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        isHit = false;
+        isTouch = false;
         rb2d.freezeRotation = true;
     }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) ||
-         Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.W))
-        {
-            Stop();
-        }
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) ||
+    	if(Input.GetKey(KeyCode.A))
+    	{
+    		Move();
+    	}
+
+		 if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) ||
          Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.W))
         {
             Move();
         }
 
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
     	Debug.Log("colliding");
     	Stop();
     }
+
+    private void OnCollisionEnter2D(Collision2D collider)
+    {
+    	Debug.Log("collision");
+    	Stop();
+    }
+
 
 
     void Move()
@@ -46,14 +52,9 @@ public class PlayerMovement : MonoBehaviour
 
 		transform.position = transform.position + new Vector3(moveHorizontal * speed * Time.deltaTime, moveVertical * speed * Time.deltaTime, 0);
         
-        //Vector3 targetVelocity = new Vector2(moveHorizontal * 2f, moveVertical * 2f);
-        //rb2d.velocity = Vector3.SmoothDamp(rb2d.velocity, targetVelocity, ref velocity, m_MovementSmoothing);
     }
     void Stop()
     {
-        Vector3 targetVelocity = new Vector2(0f, 0f);
-
-        //rb2d.velocity = Vector3.SmoothDamp(rb2d.velocity, targetVelocity, ref velocity, m_MovementSmoothing);
 
     }
 }
